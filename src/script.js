@@ -49,7 +49,7 @@ class Table {
     
     this.el.addEventListener('click', function(e){
 
-      this.highlightBlocks(e.target);
+      this.pickMatchingNeighborsOf(e.target);
       
     }.bind(this), false);
 
@@ -62,14 +62,57 @@ class Table {
 
   }
 
-  pickNeighborsOf(block){
+  getAllMatchingBlocks(block){
+    var x, y, arr, b;
+    x = block.self.x;
+    y = block.self.y;
+    arr = [];
 
-    for (var row of this.array){
-      for (var cell of row){
-        
+    function check(b){
+      if( typeof b === 'undefined' ) return;
+      if( b.self instanceof Block ){
+        if( b.self.value == block.self.value ){
+          arr.push(b);
+          matching(b);
+        }
       }
     }
 
+    // Check up
+    b = this.getBlock(x, y-1);
+    check( b );
+
+    // Check down
+    b = this.getBlock(x, y+1);
+    check( b );
+    
+    // Check left
+    b = this.getBlock(x-1, y);
+    check( b );
+    
+    // Check right
+    b = this.getBlock(x+1, y);
+    check( b );
+    
+    return arr;
+  }
+
+  pickMatchingNeighborsOf(block){
+
+    var allMatches = this.getAllMatchingBlocks( block );
+
+    for (var b of allMatches){
+
+    }
+
+  }
+
+  getBlock(x, y){
+    if( typeof this.array[y] !== 'undefined') {
+      if( typeof this.array[y][x] !== 'undefined'){
+        return this.array[y][x].block;
+      }
+    }
   }
 
   reset(){
@@ -154,6 +197,8 @@ class Block{
       this.el.classList.remove('-highlighted');
     }
   }
+
+
 
 }
 
