@@ -34,8 +34,8 @@ class Table {
 
   constructor(element){
 
-    this.width = 5;
-    this.height = 5;
+    this.width = 4;
+    this.height = 6;
 
     this.array = [];
 
@@ -49,7 +49,7 @@ class Table {
     
     this.el.addEventListener('click', function(e){
 
-      this.pickMatchingNeighborsOf(e.target);
+      this.tap(e.target.self);
       
     }.bind(this), false);
 
@@ -58,59 +58,122 @@ class Table {
 
   highlightBlocks(target){
     
-    target.self.highlight(true);
+    target.highlighted = true;
 
   }
 
   getAllMatchingBlocks(block){
-    var x, y, arr, b;
-    x = block.self.x;
-    y = block.self.y;
-    arr = [];
+    var arr = [], _this = this;
+
+    // prepare
+    block.checked = true;
+    arr.push(block);
 
     function check(b){
       if( typeof b === 'undefined' ) return;
-      if( b.self instanceof Block ){
-        if( b.self.value == block.self.value ){
+      if( b instanceof Block ){
+
+        if( b.checked ) return;
+
+        if( b.value == block.value ){
+          b.checked = true;
           arr.push(b);
           matching(b);
         }
       }
     }
 
-    // Check up
-    b = this.getBlock(x, y-1);
-    check( b );
+    function matching(block){
+      
+      let x = block.x;
+      let y = block.y;
 
-    // Check down
-    b = this.getBlock(x, y+1);
-    check( b );
+      let b;
+
+      // Check top
+      b = _this.getBlock(x, y-1);
+      check( b );
+
+      // Check bottom
+      b = _this.getBlock(x, y+1);
+      check( b );
+      
+      // Check left
+      b = _this.getBlock(x-1, y);
+      check( b );
+      
+      // Check right
+      b = _this.getBlock(x+1, y);
+      check( b );
+    }
+
+    matching( block );
     
-    // Check left
-    b = this.getBlock(x-1, y);
-    check( b );
-    
-    // Check right
-    b = this.getBlock(x+1, y);
-    check( b );
-    
+    // don't allow a move on 1-block group
+    if( arr.length <= 1 ) return [];
+
     return arr;
   }
 
-  pickMatchingNeighborsOf(block){
 
+
+
+  tap(block){
+
+    let b, x;
+
+    // reset "checked" value
+    for(x of this.array){
+      for(var cell of x){
+        cell.block.self.checked = false;
+      }
+    }
+    
     var allMatches = this.getAllMatchingBlocks( block );
 
-    for (var b of allMatches){
-
+    // check if it's a FIRST tap
+    if( !block.highlighted ){
+      for ( b of allMatches ){
+        b.highlighted = true;
+      }
+    }
+    else
+    {
+      // SECOND TAP
+      for ( b of allMatches ){
+        b.destroy();
+      }
     }
 
   }
 
+
+  moveBlocksDown(){
+
+    for(var x of this.array){
+      for(var cell of x){
+        
+      }
+    }
+
+  }
+
+
+  highlightAll(yep){
+
+    for(var x of this.array){
+      for(var cell of x){
+      }
+    }
+
+  }
+
+
+
   getBlock(x, y){
-    if( typeof this.array[y] !== 'undefined') {
-      if( typeof this.array[y][x] !== 'undefined'){
-        return this.array[y][x].block;
+    if( typeof this.array[x] !== 'undefined') {
+      if( typeof this.array[x][y] !== 'undefined'){
+        return this.array[x][y].block.self;
       }
     }
   }
@@ -128,24 +191,27 @@ class Table {
   }
 
   render(){
-    var row, col, block, val;
+    var row, cell, block, val;
 
-    for( var i=0; i<this.width; i++){
+    for( var x=0; x<this.width; x++ ){
+      this.array[x] = [];
+    }
+
+    for( var y=0; y<this.height; y++){
 
       row = $('<div class="row">');
-      this.array[i] = [];
 
-      for( var j=0; j<this.height; j++){
+      for( x=0; x<this.width; x++){
 
-        col = new Cell();
-        this.array[i][j] = col.self;
+        cell = new Cell();
+        this.array[x][y] = cell;
 
         val = Math.ceil( (game.level+1) * (Math.random() * 3) );
 
-        block = new Block( val, i, j );
+        block = new Block( val, x, y );
 
-        col.appendChild( block );
-        row.append(col);
+        cell.el.appendChild( block.el );
+        row.append(cell.el);
 
       }
       this.el.appendChild(row[0]);
@@ -162,9 +228,8 @@ class Cell{
 
     this.el = document.createElement('div');
     this.el.classList.add('col');
-    this.el.self = this;
 
-    return this.el;
+    return this;
 
   }
 
@@ -182,20 +247,29 @@ class Block{
     this.x = x;
     this.y = y;
     this.el = $('<div class="Block v'+value+'">')[0];
-    this.highlighted = false;
-
     this.el.self = this;
+    this._highlighted = false;
 
-    return this.el;
+    return this;
 
   }
 
-  highlight(yep){
+  destroy(){
+    this.el.remove();
+    // TODO, make the table remove me plz
+  }
+
+  set highlighted(yep){
+    this._highlighted = yep;
     if(yep){
       this.el.classList.add('-highlighted');
     }else{
       this.el.classList.remove('-highlighted');
     }
+  }
+
+  get highlighted(){
+    return this._highlighted;
   }
 
 
