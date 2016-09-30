@@ -18,17 +18,25 @@ module.exports = function(grunt) {
     jshint: {
       all: ['Gruntfile.js', 'src/**/*.js'],
       options: {
-        node: true,
-        esversion: 6
-      },
-
+        "globals": {
+          "$": false
+        },
+        "node": true,
+        "esversion": 6
+      }
     },
     copy: {
       main: {
         files: [
-          {expand: true, src: ['src/**.js', 'src/**.html'], dest: 'public/', flatten: true, filter: 'isFile'},
+          {expand: true, src: ['src/**.html'], dest: 'public/', flatten: true, filter: 'isFile'},
         ]
       }
+    },
+    concat: {
+      dist: {
+        src: ['src/js/Game.js', 'src/js/Table.js', 'src/js/Block.js', 'src/js/end.js'],
+        dest: 'public/script.js',
+      },
     },
     watch: {
       sass: {
@@ -36,8 +44,8 @@ module.exports = function(grunt) {
         tasks: ['sass'],
       },
       js: {
-        files: 'src/*.js',
-        tasks: ['jshint', 'copy'],
+        files: 'src/**/*.js',
+        tasks: ['jshint', 'concat'],
         options: {
           livereload: true,
         },
@@ -75,15 +83,17 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-connect');
+  grunt.loadNpmTasks('grunt-contrib-concat');
 
 
-  grunt.registerTask('default', ['sass', 'jshint', 'copy']);
+  grunt.registerTask('default', ['sass', 'jshint', 'concat', 'copy']);
 
   // Default task(s).
   grunt.registerTask('serve', 'Compile then start a connect web server', function() {
     grunt.task.run([
       'sass',
       'jshint',
+      'concat',
       'copy',
       'connect',
       'watch'
