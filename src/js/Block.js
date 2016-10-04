@@ -44,6 +44,8 @@ class Block{
       let y = this.y * window.game.cellSize ;
 
       this.el.style.transform = 'translate3d('+ x +'px, '+ y +'px, 0px)' + this.transformScale;
+      this.el.style.width = window.game.cellSize+'px';
+      this.el.style.height = window.game.cellSize+'px';
   }
 
   updateScale(){

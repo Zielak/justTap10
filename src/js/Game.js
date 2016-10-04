@@ -9,12 +9,13 @@ class Game {
     this._score = 0;
     this._level = 0;
 
-    this._cellSize = window.innerWidth / 5;
-
     this.el = document.querySelector('body');
 
+    this._cellSize = this._table.el.scrollWidth / 5;
+
+
     window.addEventListener('resize', function(){
-      this._cellSize = window.innerWidth / 5;
+      this._cellSize = this._table.el.scrollWidth / 5;
     }.bind(this));
 
     window.addEventListener('tap.match', function(){
