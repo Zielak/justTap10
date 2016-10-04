@@ -11,7 +11,7 @@ module.exports = function(grunt) {
         options: {
           
         },
-        src: 'src/*.sass',
+        src: 'src/styles.sass',
         dest: 'public/styles.css',
       }
     },
@@ -34,13 +34,13 @@ module.exports = function(grunt) {
     },
     concat: {
       dist: {
-        src: ['src/js/Game.js', 'src/js/Table.js', 'src/js/Block.js', 'src/js/end.js'],
+        src: ['src/js/Game.js', 'src/js/ChanceGenerator.js', 'src/js/Table.js', 'src/js/Block.js', 'src/js/end.js'],
         dest: 'public/script.js',
       },
     },
     watch: {
       sass: {
-        files: 'src/**/*.sass',
+        files: 'src/sass/*.sass',
         tasks: ['sass'],
       },
       js: {

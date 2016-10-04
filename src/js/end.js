@@ -6,5 +6,8 @@ window.game = game;
 
 window.game.begin();
 
+window.log = function(){
+    console.log(arguments);
+};
 
 })();

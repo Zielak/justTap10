@@ -14,6 +14,8 @@ class Table {
 
     this.initEvents();
 
+    this.chance = new window.ChanceGenerator();
+
   }
 
   get width(){ return this._width; }
@@ -94,7 +96,7 @@ class Table {
 
   tap(block){
 
-    let b, x;
+    let b, x, event;
 
     // reset "checked" value
     for(x of this.array){
@@ -119,10 +121,19 @@ class Table {
       for ( b of allMatches ){
         b.highlighted = true;
       }
+
+      // Dispatch Event
+      event = new Event('tap.highlight');
+      window.dispatchEvent(event);
     }
     else
     {
       // SECOND TAP
+
+      // Dispatch Event
+      event = new Event('tap.match');
+      window.dispatchEvent(event);
+
       // Destroy all matching blocks
       for ( b of allMatches ){
         this.array[b.x][b.y] = null;
@@ -175,7 +186,7 @@ class Table {
   fillEmptySpaces(){
 
     for( var x=0; x<this.width; x++){
-      for( var y=0; y<this.width; y++){
+      for( var y=0; y<this.height; y++){
         if(this.array[x][y] === null){
           this.addBlock(this.generateNewBlock(x, y));
         }
@@ -189,7 +200,7 @@ class Table {
     if(v !== undefined){
       val = v;
     }else{
-      val = Math.ceil( (window.game.level+1) * (Math.random() * 3) );
+      val = this.chance.coin();
     }
 
     return new Block( val, x, y );
@@ -232,6 +243,18 @@ class Table {
         return this.array[x][y];
       }
     }
+  }
+
+  get highestValue(){
+    let max = 0;
+    for( var x=0; x<this.width; x++){
+      for( var y=0; y<this.height; y++){
+        if(this.array[x][y].value > max){
+          max = this.array[x][y].value;
+        }
+      }
+    }
+    return max;
   }
 
   reset(){

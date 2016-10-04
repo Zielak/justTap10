@@ -67,7 +67,6 @@ class Block{
   get highlighted(){
     return this._highlighted;
   }
-
 }
 
 window.Block = Block;

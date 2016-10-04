@@ -17,7 +17,15 @@ class Game {
       this._cellSize = window.innerWidth / 5;
     }.bind(this));
 
+    window.addEventListener('tap.match', function(){
+      if(this.table.highestValue > this.level+3){
+        this._level++;
+        log('GAME: changed level: ', this.level);
+      }
+    }.bind(this));
+
   }
+
   get table() {return this._table;}
   get score() {return this._score;}
   get level() {return this._level;}
