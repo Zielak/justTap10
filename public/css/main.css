@@ -1,0 +1,18 @@
+body {
+  font-family: arial;
+  margin: 0;
+}
+
+button {
+  font-size: 1.2em;
+}
+
+article {
+  margin: 0 auto;
+  width: 100%;
+  max-width: 640px;
+}
+
+#GameTable {
+  display: grid;
+}

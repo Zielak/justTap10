@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, minimum-scale=1.0, maximum-scale=1.0"
+    />
+    <title>Just tap 10</title>
+    <link href="css/main.css" rel="stylesheet" />
+    <link href="css/block.css" rel="stylesheet" />
+  </head>
+  <body>
+    <article>
+      <div>
+        <h1>Just tap 10</h1>
+      </div>
+
+      <div>
+        <button onclick="window.dispatchEvent(new Event('begin'));">
+          Begin / Restart
+        </button>
+      </div>
+
+      <div id="GameTable"></div>
+      <div>
+        <img
+          id="pic"
+          style="display: none"
+          src="win.jpeg"
+          alt="wait for it..."
+        />
+      </div>
+
+      <p>
+        Merge all connected blocks of same number to a one block of higher
+        number.
+      </p>
+      <p>Tap once to highlight possibilities. Tap again to merge</p>
+      <p>To win, <em>just tap 10</em></p>
+    </article>
+
+    <script src="app.js"></script>
+  </body>
+</html>
